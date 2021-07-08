@@ -1,0 +1,32 @@
+pipeline{
+    agent any
+    tools {
+        maven 'maven 3'
+    }
+    environment {
+        DOCKER_TAG = getVersion()
+    }
+    stages{
+        stage('SCM'){
+            steps{
+                git credentialsId: 'xgen_github', url: 'https://github.com/xgenOsama/devops_xgen_repo'
+            }
+        }
+        stage('maven build'){
+            steps{
+                sh "mvn clean package"
+            }
+        }
+        stage('docke build'){
+            steps{
+                sh "docker build . -t xgenosama/osama_app:${DOCKER_TAG} "
+            }
+        }
+    }
+}
+    
+def getVersion(){
+    def commitHash = sh returnStdout: true, script: 'git rev-parse --short HEAD'
+    return commitHash
+}
+
