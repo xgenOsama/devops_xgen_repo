@@ -17,9 +17,22 @@ pipeline{
                 sh "mvn clean package"
             }
         }
-        stage('docke build'){
+        stage('docker build'){
             steps{
                 sh "docker build . -t xgenosama/osama_app:${DOCKER_TAG} "
+            }
+        }
+        stage('dockerhub push'){
+            steps{
+                withCredentials([string(credentialsId: 'my_docker_hub_password', variable: 'DockerHubPwd')]) {
+                    sh "docker login -u xgenosama -p ${DockerHubPwd}"
+                }
+                sh "docker push  xgenosama/osama_app:${DOCKER_TAG} "
+            }
+        }
+        stage('docker deploy'){
+            steps{
+                ansiblePlaybook credentialsId: 'newlinux-slave',  disableHostKeyChecking: true, extras: '-e DOCKER_TAG="${DOCKER_TAG}"', installation: 'ansible2', inventory: 'dev.inv', playbook: 'deploy-docker.yml'
             }
         }
     }
