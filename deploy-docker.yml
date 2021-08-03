@@ -3,6 +3,10 @@
   remote_user: ubuntu
   become: true
   tasks:
+    - name: Install python apt
+      apt:
+        name: python-apt
+        state: present
     - name: Install python pip
       apt:
         name: python-pip
