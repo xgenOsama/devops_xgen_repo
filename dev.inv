@@ -1,2 +1,2 @@
 [dev]
-192.168.232.130
+192.168.232.130 ansible_become_pass=javag33k
