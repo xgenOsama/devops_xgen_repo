@@ -21,4 +21,4 @@
         image: "xgenosama/osama_app:ac99f78"
         state: started
         published_ports:
-          - 0.0.0.0:8080:8080
+          - 0.0.0.0:8010:8080
